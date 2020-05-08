@@ -1,38 +1,50 @@
 <ion-content>
-  <ion-item>
-    <ion-avatar slot="start">
-      <ion-icon name="person-circle-outline"></ion-icon>
-    </ion-avatar>
-    <ion-label>
-      <h2>
-        <h3>Nombre </h3>{{usuario.nombre}}
-      </h2>
-    </ion-label>
-  </ion-item>
-
-  <ion-item>
-    <ion-avatar slot="start">
-      <ion-icon name="book-outline"></ion-icon>
-
-    </ion-avatar>
-    <ion-label>
-      <h4>
-        DNI : {{usuario.dni}}
-      </h4>
-    </ion-label>
-  </ion-item>
-
-  <ion-item>
-    <ion-avatar slot="start">
-      <ion-icon name="people-circle-outline"></ion-icon>
-    </ion-avatar>
-    <ion-label>
-      <h2>
-        <h3>Rol</h3>{{usuario.rol.descripcion}}
-      </h2>
-    </ion-label>
-  </ion-item>
-  <ion-button expand="block" (click)="logout()">Salir</ion-button>
+  <ion-row>
+    <ion-col size="1"></ion-col>
+    <ion-col size="10">
+      <ion-card>
+      <ion-item>
+        <ion-avatar slot="start">
+          <img src="../../../assets/img/3289576-individual-man-people-person_107097.png">
+          <!-- <ion-icon name="person-circle-outline"></ion-icon> -->
+        </ion-avatar>
+        <ion-label>
+          <h2>
+            <h3>Nombre </h3>{{usuario.nombre}}
+          </h2>
+        </ion-label>
+      </ion-item>
+    
+      <ion-item>
+        <ion-avatar slot="start">
+          <img src="../../../assets/img/dni.png">
+          <!-- <ion-icon name="book-outline"></ion-icon> -->
+    
+        </ion-avatar>
+        <ion-label>
+          <h4>
+            DNI : {{usuario.dni}}
+          </h4>
+        </ion-label>
+      </ion-item>
+    
+      <ion-item>
+        <ion-avatar slot="start">
+          <img src="../../../assets/img/rol.png">
+          <!-- <ion-icon name="people-circle-outline"></ion-icon> -->
+        </ion-avatar>
+        <ion-label>
+          <h2>
+            <h3>Rol</h3>{{usuario.rol.descripcion}}
+          </h2>
+        </ion-label>
+      </ion-item>
+      <ion-button expand="block" (click)="logout()">Salir</ion-button>
+    </ion-card>
+    </ion-col>
+    <ion-col size="1"></ion-col>
+  </ion-row>
+  
 
   <!-- <ion-button (click)="mostrar()">Token</ion-button> -->
 </ion-content>

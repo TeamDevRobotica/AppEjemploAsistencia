@@ -1,13 +1,17 @@
-<ion-content>
-  <ion-button (click)='cargarMarcadas()'>
+<ion-content color="light">
+  <!-- <ion-button (click)='cargarMarcadas()'>
     <ion-icon slot="start" name="refresh-circle-outline"></ion-icon>
-    Actualizar
-  </ion-button>
+    Ver Lista
+  </ion-button> -->
   <ion-list inset *ngFor="let marcada of marcadas">
     <ion-item>
       <ion-avatar slot="start">
-        <ion-icon name="alarm-outline"></ion-icon>
+        <img src="../../../assets/img/alarma2.png">
+        <!-- <ion-icon name="person-circle-outline"></ion-icon> -->
       </ion-avatar>
+      <!-- <ion-avatar slot="start">
+        <ion-icon name="alarm-outline"></ion-icon>
+      </ion-avatar> -->
       <ion-label>
         <h2>{{marcada.institucion===null?"Sin Institucion Seleccionada":marcada.institucion.nombre}}</h2>
         <h3>{{marcada.hora}}</h3>
