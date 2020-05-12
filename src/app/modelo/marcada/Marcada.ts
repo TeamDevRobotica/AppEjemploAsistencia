@@ -8,7 +8,7 @@ export class Marcada extends Identidad {
     constructor(hora: string, geolocalizacion: string, estadoMarcada: EstadoMarcada) {
         super();
         this.hora = hora,
-            this.geolocalizacion = geolocalizacion
+        this.geolocalizacion = geolocalizacion
         this.estadoMarcada = estadoMarcada;
     }
 

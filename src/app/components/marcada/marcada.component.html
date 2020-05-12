@@ -1,28 +1,50 @@
 <!-- <p>
   marcada works!
 </p> -->
-<ion-item>
+<ion-content>
+<ion-card>
+  <ion-card-content>
+  <p>
+    Selecciona la ubicación donde se encuentre realizando tareas y marque la entrada.
+    antes de retirarse no se olvide de amrcar su Salida. <br>
+    <strong>Gracias y Buen Día!</strong>
+  </p>
+</ion-card-content>
+</ion-card>
+<ion-card>
+  <ion-item>
+    <ion-label>Instutucion</ion-label>
+    <ionic-selectable [(ngModel)]="institucion" [items]="instituciones" itemValueField="id" itemTextField="nombre"
+      [canSearch]="true" (onChange)="portChange($event)" [canClear]="true" clearButtonText="Limpiar"
+      searchPlaceholder="Nombre Institucion" [searchFailText]="'No se encontraron instituciones'">
+    </ionic-selectable>
+  </ion-item>
+</ion-card >
+<!-- <ion-item>
   <ion-label>Instutucion</ion-label>
   <ionic-selectable [(ngModel)]="institucion" [items]="instituciones" itemValueField="id" itemTextField="nombre"
     [canSearch]="true" (onChange)="portChange($event)" [canClear]="true" clearButtonText="Limpiar"
     searchPlaceholder="Nombre Institucion" [searchFailText]="'No se encontraron instituciones'">
   </ionic-selectable>
-</ion-item>
-<ion-content>
+</ion-item> -->
 
-  <ion-fab vertical="center" horizontal="center" slot="fixed">
+
+  <ion-fab vertical="center" horizontal="center" slot="fixed" style="margin-top: 2rem;">
     <ion-fab-button>
       <ion-icon name="share"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="start">
-      <ion-fab-button *ngIf="entrada" (click)='marcar()'>
-        <ion-icon name="log-in-outline"></ion-icon>
-      </ion-fab-button>
+      
+      <ion-button color="success" *ngIf="entrada" (click)='marcar()'>
+        <!-- <ion-icon name="log-in-outline"></ion-icon> -->
+        ENTRADA
+      </ion-button>
     </ion-fab-list>
     <ion-fab-list side="end">
-      <ion-fab-button *ngIf="!entrada" (click)='marcarSalida()'>
-        <ion-icon name="log-out-outline"></ion-icon>
-      </ion-fab-button>
+      <ion-button color="danger" *ngIf="!entrada" (click)='marcarSalida()'>
+        <!-- <ion-icon name="log-out-outline"></ion-icon> -->
+        SALIDA
+      </ion-button>
     </ion-fab-list>
   </ion-fab>
 </ion-content>

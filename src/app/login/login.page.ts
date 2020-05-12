@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../servicios/auth/auth.service';
 import { StorageService } from '../servicios/storage/storage.service';
-
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -21,8 +21,19 @@ export class LoginPage implements OnInit {
     public formBuilder: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private storageService: StorageService) { }
+    private storageService: StorageService,
+    private alertController: AlertController) { }
 
+    async presentAlert() {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        // subHeader: 'Subtitle',
+        message: 'Controle Usuario y Contraseña',
+        cssClass: 'secondary',
+        buttons: ['ACEPTAR']
+      });
+      await alert.present();
+    }
   ngOnInit() {
     this.ionicForm = this.formBuilder.group({
       nombreUsuario: ['', [Validators.required, Validators.minLength(2)]],
@@ -55,9 +66,17 @@ export class LoginPage implements OnInit {
         //Se almacenan el token y otros datos del usuario en localStorage
         this.storageService.store('userData', res);
         this.router.navigate(['/tabs']);
-      });
+      },
+      (error => this.presentAlert())
+      );
+      
+
+      
       console.log(this.ionicForm.value)
     }
-  }
+    }
+     
+    // console.error('ERROR')
+    // alert('Error');
 
 }
