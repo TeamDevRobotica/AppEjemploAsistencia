@@ -39,11 +39,8 @@ export class AppComponent {
 
 
   backButtonEvent() {
-    console.log('backButton');
-    console.log('url ' + this.router.url);
     this.backButtonSubscription = this.platform.backButton.subscribe(async () => {
       this.routerOutlets.forEach((outlet: IonRouterOutlet) => {
-        console.log('url ' + this.router.url);
         if (outlet && outlet.canGoBack()) {
           outlet.pop();
         } else if (this.router.url === "/") {

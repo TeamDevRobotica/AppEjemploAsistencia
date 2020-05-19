@@ -21,6 +21,7 @@ export class AuthService {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     let options = { headers: headers, withCredintials: false };
     return this.httpService.post('login', postData, options);
+    
   }
 
   logout() {
@@ -29,4 +30,5 @@ export class AuthService {
       this.router.navigate(['']);
     });
   }
+  
 }

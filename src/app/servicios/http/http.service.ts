@@ -17,7 +17,8 @@ export class HttpService {
   // };
   // options = { headers: this.headers, withCredintials: false };
   //apiURL = 'http://localhost:50000/api/';
-  apiURL = "http://192.168.0.6:50000/api/";
+  //apiURL = "http://192.168.0.6:50000/api/";
+  apiURL = 'http://138.117.79.144/api/';
   constructor(
     private http: HttpClient
   ) {

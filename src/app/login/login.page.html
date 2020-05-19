@@ -1,65 +1,79 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar>
     <ion-title>login</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
 <ion-content>
-  <form [formGroup]="ionicForm" (ngSubmit)="submitForm()" novalidate>
+  <ion-grid>
+  <ion-row class="justify-content-center align-items-center">
+    <img src="../../assets/img/logoescuela.png" style="height: auto; width: 250px;">
+  </ion-row>
+</ion-grid>
+  <ion-row>
+      <ion-card>
+        <form [formGroup]="ionicForm" (ngSubmit)="submitForm()" novalidate>
+    
+        <ion-item lines="full">
+          <ion-label position="floating">
+            
+            Usuario</ion-label>
+          <ion-input formControlName="nombreUsuario" type="text"></ion-input>
+        </ion-item>
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.nombreUsuario.errors?.required">
+          Usuario es obligatorio.
+        </span>
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.nombreUsuario.errors?.minlength">
+          Usuario debe tener minimo 2 letras.
+        </span>
+    
+        <ion-item lines="full">
+          <ion-label position="floating">Clave</ion-label>
+          <ion-input formControlName="clave" type="password"></ion-input>
+        </ion-item>
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.clave.errors?.required">
+          Clave es obligatorio.
+        </span>
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.clave.errors?.minlength">
+          Clave debe tener minimo 2 letras.
+        </span>
+    
+        <!-- <ion-item lines="full">
+          <ion-label position="floating">Email</ion-label>
+          <ion-input formControlName="email" type="email"></ion-input>
+        </ion-item>
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.email.errors?.required">
+          Email is required.
+        </span>
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.email.errors?.pattern">
+          Please provide valid email id.
+        </span>
+    
+        <ion-item lines="full">
+          <ion-label position="floating">DOB</ion-label>
+          <ion-datetime (ionChange)="getDate($event)" formControlName="dob" [value]="defaultDate"></ion-datetime>
+        </ion-item>
+    
+        <ion-item lines="full">
+          <ion-label position="floating">Mobile</ion-label>
+          <ion-input maxlength="10" formControlName="mobile" type="text" required></ion-input>
+        </ion-item>
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.mobile.errors?.required">
+          Mobile number is required.
+        </span>
+        <span class="error ion-padding" *ngIf="isSubmitted && errorControl.mobile.errors?.pattern">
+          Only numerical values allowed.
+        </span> -->
+    
+        <ion-row>
+          <ion-col>
+            <ion-button type="submit" color="primary" expand="block">LogIn</ion-button>
+          </ion-col>
+        </ion-row>
+      </form>
+    </ion-card>
 
-    <ion-item lines="full">
-      <ion-label position="floating">Usuario</ion-label>
-      <ion-input formControlName="nombreUsuario" type="text"></ion-input>
-    </ion-item>
-    <span class="error ion-padding" *ngIf="isSubmitted && errorControl.nombreUsuario.errors?.required">
-      Usuario es obligatorio.
-    </span>
-    <span class="error ion-padding" *ngIf="isSubmitted && errorControl.nombreUsuario.errors?.minlength">
-      Usuario debe tener minimo 2 letras.
-    </span>
-
-    <ion-item lines="full">
-      <ion-label position="floating">Clave</ion-label>
-      <ion-input formControlName="clave" type="password"></ion-input>
-    </ion-item>
-    <span class="error ion-padding" *ngIf="isSubmitted && errorControl.clave.errors?.required">
-      Clave es obligatorio.
-    </span>
-    <span class="error ion-padding" *ngIf="isSubmitted && errorControl.clave.errors?.minlength">
-      Clave debe tener minimo 2 letras.
-    </span>
-
-    <!-- <ion-item lines="full">
-      <ion-label position="floating">Email</ion-label>
-      <ion-input formControlName="email" type="email"></ion-input>
-    </ion-item>
-    <span class="error ion-padding" *ngIf="isSubmitted && errorControl.email.errors?.required">
-      Email is required.
-    </span>
-    <span class="error ion-padding" *ngIf="isSubmitted && errorControl.email.errors?.pattern">
-      Please provide valid email id.
-    </span>
-
-    <ion-item lines="full">
-      <ion-label position="floating">DOB</ion-label>
-      <ion-datetime (ionChange)="getDate($event)" formControlName="dob" [value]="defaultDate"></ion-datetime>
-    </ion-item>
-
-    <ion-item lines="full">
-      <ion-label position="floating">Mobile</ion-label>
-      <ion-input maxlength="10" formControlName="mobile" type="text" required></ion-input>
-    </ion-item>
-    <span class="error ion-padding" *ngIf="isSubmitted && errorControl.mobile.errors?.required">
-      Mobile number is required.
-    </span>
-    <span class="error ion-padding" *ngIf="isSubmitted && errorControl.mobile.errors?.pattern">
-      Only numerical values allowed.
-    </span> -->
-
-    <ion-row>
-      <ion-col>
-        <ion-button type="submit" color="primary" expand="block">LogIn</ion-button>
-      </ion-col>
-    </ion-row>
-  </form>
+   
+  </ion-row>
+  
 </ion-content>

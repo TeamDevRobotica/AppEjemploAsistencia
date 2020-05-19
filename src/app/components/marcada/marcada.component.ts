@@ -10,6 +10,7 @@ import { DateUtils } from '../../util/DateUtils';
 import { Usuario } from 'src/app/modelo/Usuario';
 import { EstadoMarcada } from 'src/app/modelo/marcada/EstadoMarcada';
 import { GeolocalizacionService } from 'src/app/servicios/geo/geolocalizacion.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -32,7 +33,8 @@ export class MarcadaComponent implements OnInit {
   constructor(
     private htthService: HttpService,
     private storageService: StorageService,
-    private geo: GeolocalizacionService
+    private geo: GeolocalizacionService,
+    private router: Router
   ) {
 
   }
@@ -62,6 +64,7 @@ export class MarcadaComponent implements OnInit {
     this.htthService.post('asistencia', this.asistencia, options).subscribe(asist => {
       this.storageService.store('isEntrada', false);
       alert('Entrada con exito');
+      this.router.navigate(['']);
     });
   }
 
@@ -82,6 +85,7 @@ export class MarcadaComponent implements OnInit {
     this.htthService.post('asistencia', this.asistencia, options).subscribe(asist => {
       this.storageService.store('isEntrada', true);
       alert('Salida con exito');
+      this.router.navigate(['']);
     });
   }
 
