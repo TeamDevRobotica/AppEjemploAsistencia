@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { StorageService } from '../storage/storage.service';
 
 
 @Injectable({
@@ -10,23 +10,17 @@ import { catchError, tap } from 'rxjs/operators';
 })
 export class HttpService {
 
-  // token: any;
-  // headers = new HttpHeaders({ 'Content-Type': 'application/json'/* , 'auth': 'asdawww' */ });
-  // httpHeader = {
-  //   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  // };
-  // options = { headers: this.headers, withCredintials: false };
   //apiURL = 'http://localhost:50000/api/';
   //apiURL = "http://192.168.0.6:50000/api/";
   apiURL = 'http://138.117.79.144/api/';
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private storage: StorageService
   ) {
 
   }
 
   post(serviceName: string, data: any, options: Object) {
-    console.log('post');
     const url = this.apiURL + serviceName;
     return this.http.post(url, data, options);
   }

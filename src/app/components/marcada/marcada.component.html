@@ -5,8 +5,7 @@
   <ion-card>
     <ion-card-content>
       <p>
-        Selecciona la ubicación donde se encuentre realizando tareas y marque la entrada.
-        antes de retirarse no se olvide de marcar su Salida. <br>
+        Filtre y seleccione la ubicación. Marque la entrada y al terminar la salida. <br>
         <strong>Gracias y Buen Día!</strong>
       </p>
     </ion-card-content>
@@ -14,15 +13,20 @@
   <ion-card>
     <ion-item>
       <ion-label>Institucion</ion-label>
-      <ionic-selectable [(ngModel)]="institucion" [items]="instituciones" itemValueField="id" itemTextField="nombre"
-        [canSearch]="true" [hasVirtualScroll]="true" (onChange)="portChange($event)" [canClear]="true"
-        clearButtonText="Limpiar" searchPlaceholder="Nombre Institucion"
-        [searchFailText]="'No se encontraron instituciones'">
+      <ionic-selectable [(ngModel)]="institucion" [items]="instituciones" itemValueField="id" itemTextField="cue"
+        [virtualScrollHeaderFn]="getGroupText" [hasVirtualScroll]="true" [canSearch]="true"
+        (onSearch)="searchPorts($event)" (onChange)="portChange($event)" [canClear]="true" clearButtonText="Limpiar"
+        searchPlaceholder="Nombre, Cue o Siglas" [searchFailText]="'No se encontraron instituciones'">
       </ionic-selectable>
     </ion-item>
   </ion-card>
 
-  <ion-fab vertical="center" horizontal="center" slot="fixed" style="margin-top: 2rem;">
+  <ion-item>
+    <ion-label position="floating">Observacion</ion-label>
+    <ion-input type="text" [(ngModel)]="observacion"></ion-input>
+  </ion-item>
+
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed" style="margin-top: 2rem;">
     <ion-fab-button>
       <ion-icon name="share"></ion-icon>
     </ion-fab-button>
@@ -40,4 +44,5 @@
       </ion-button>
     </ion-fab-list>
   </ion-fab>
+
 </ion-content>

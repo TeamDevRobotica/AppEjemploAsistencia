@@ -53,7 +53,7 @@ export class AppComponent {
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
       header: 'Confirmar!',
-      message: 'Quiere salir de la app !!!',
+      message: 'Quiere salir de la app ?',
       buttons: [
         {
           text: 'Cancelar',

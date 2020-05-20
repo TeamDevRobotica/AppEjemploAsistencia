@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpService } from 'src/app/servicios/http/http.service';
 import { StorageService } from 'src/app/servicios/storage/storage.service';
-import { HttpHeaders } from '@angular/common/http';
-import { DateUtils } from 'src/app/util/DateUtils';
 import { Marcada } from 'src/app/modelo/marcada/Marcada';
+import { AsistenciaService } from 'src/app/servicios/asistencia/asistencia.service';
 
 @Component({
   selector: 'app-lista-marcada',
@@ -13,7 +11,7 @@ import { Marcada } from 'src/app/modelo/marcada/Marcada';
 export class ListaMarcadaComponent implements OnInit {
 
   marcadas: Marcada[] = [];
-  constructor(private httpService: HttpService, private storageService: StorageService) { }
+  constructor(private asistenciaService: AsistenciaService, private storageService: StorageService) { }
 
   ngOnInit() {
     this.cargarMarcadas();
@@ -23,16 +21,10 @@ export class ListaMarcadaComponent implements OnInit {
     this.cargarMarcadas();
   }
 
-
-
   async cargarMarcadas() {
-    let fecha = DateUtils.mixedDateToDateString(new Date());
     let user = await this.storageService.get('userData');
-    let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': user.token });
-    let options = { headers: headers, withCredintials: false };
-    this.httpService.get('asistenciahoy/' + user.idUsuario + '/' + fecha, options).subscribe(asistencia => {
-
-      //     //Orden de la coleccion por id
+    this.asistenciaService.getAsistenciaHoy(user.token, user.idUsuario).subscribe(asistencia => {
+      //Orden de la coleccion por id
       this.marcadas = asistencia['marcadas'].sort((n1, n2) => {
         if (n1.id < n2.id) {
           return 1;

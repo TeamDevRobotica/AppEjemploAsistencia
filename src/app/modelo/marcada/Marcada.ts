@@ -5,16 +5,19 @@ import { EstadoMarcada } from "./EstadoMarcada";
 
 export class Marcada extends Identidad {
 
-    constructor(hora: string, geolocalizacion: string, estadoMarcada: EstadoMarcada) {
+    constructor(hora: string, geolocalizacion: string, estadoMarcada: EstadoMarcada, observacion: string) {
         super();
         this.hora = hora,
-        this.geolocalizacion = geolocalizacion
+            this.geolocalizacion = geolocalizacion
         this.estadoMarcada = estadoMarcada;
+        this.observacion = observacion;
     }
 
     hora: string;
 
     geolocalizacion: string;
+
+    observacion: string;
 
     asistencia: Asistencia;
 

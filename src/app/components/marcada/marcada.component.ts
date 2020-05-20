@@ -1,16 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicSelectableComponent } from 'ionic-selectable';
 import { Institucion } from '../../modelo/institucion/Institucion';
-import { HttpService } from 'src/app/servicios/http/http.service';
 import { StorageService } from 'src/app/servicios/storage/storage.service';
-import { HttpHeaders } from '@angular/common/http';
-import { Asistencia } from 'src/app/modelo/asistencia/Asistencia';
-import { Marcada } from 'src/app/modelo/marcada/Marcada';
-import { DateUtils } from '../../util/DateUtils';
-import { Usuario } from 'src/app/modelo/Usuario';
-import { EstadoMarcada } from 'src/app/modelo/marcada/EstadoMarcada';
 import { GeolocalizacionService } from 'src/app/servicios/geo/geolocalizacion.service';
 import { Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
+import { InstitucionService } from 'src/app/servicios/institucion/institucion.service';
+import { AsistenciaService } from 'src/app/servicios/asistencia/asistencia.service';
 
 
 @Component({
@@ -23,50 +20,73 @@ export class MarcadaComponent implements OnInit {
   instituciones: Institucion[];
   institucion: Institucion;
 
-  asistencia: Asistencia;
-  marcada: Marcada;
-  usuario: Usuario;
-  estadoMarcada: EstadoMarcada;
+  entrada: any;
+  observacion: any;
 
-  entrada;
+  portsSubscription: Subscription;
 
   constructor(
-    private htthService: HttpService,
+
     private storageService: StorageService,
     private geo: GeolocalizacionService,
-    private router: Router
+    private router: Router,
+    public loading: LoadingController,
+    private institucionService: InstitucionService,
+    private asistenciaService: AsistenciaService
   ) {
 
   }
 
-  async ngOnInit() {
-    this.entrada = await this.storageService.get('isEntrada') == null ? true : await this.storageService.get('isEntrada');
-    this.institucion = null;
-    await this.storageService.get('userData').then(user => {
-      let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': user.token });
-      let options = { headers: headers, withCredintials: false };
-      this.htthService.get('institucion', options).subscribe(inst => {
-        this.instituciones = inst;
-      });
-    });
+  getGroupText(port: Institucion, portIndex: number, ports: Institucion[]) {
+    if (portIndex === 0 || port.id !== ports[portIndex - 1].id) {
+      return port.nombre + ' - ' + port.siglas;
+    }
 
+    return null;
   }
 
-  async marcar() {
-    this.entrada = false;
-
-    let user = await this.storageService.get('userData');
-
-    await this.crearAsistencia(user.idUsuario, 1);
-
-    let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': user.token });
-    let options = { headers: headers, withCredintials: false };
-    this.htthService.post('asistencia', this.asistencia, options).subscribe(asist => {
-      this.storageService.store('isEntrada', false);
-      alert('Entrada con exito');
-      this.router.navigate(['']);
+  filterPorts(ports: Institucion[], text: string) {
+    return ports.filter(port => {
+      return port.nombre.toLowerCase().indexOf(text) !== -1 ||
+        port.cue.toLowerCase().indexOf(text) !== -1 ||
+        port.siglas.toLowerCase().indexOf(text) !== -1;
     });
   }
+
+  searchPorts(event: {
+    component: IonicSelectableComponent,
+    text: string
+  }) {
+    let text = event.text.trim().toLowerCase();
+    event.component.startSearch();
+
+    // Close any running subscription.
+    if (this.portsSubscription) {
+      this.portsSubscription.unsubscribe();
+    }
+
+    if (!text) {
+      // Close any running subscription.
+      if (this.portsSubscription) {
+        this.portsSubscription.unsubscribe();
+      }
+
+      event.component.items = [];
+      event.component.endSearch();
+      return;
+    }
+
+    this.portsSubscription = this.institucionService.getPortsAsync().subscribe(ports => {
+      // Subscription will be closed when unsubscribed manually.
+      if (this.portsSubscription.closed) {
+        return;
+      }
+
+      event.component.items = this.filterPorts(ports, text);
+      event.component.endSearch();
+    });
+  }
+
 
   portChange(event: {
     component: IonicSelectableComponent,
@@ -75,35 +95,67 @@ export class MarcadaComponent implements OnInit {
     this.institucion = event.value;
   }
 
+  async ngOnInit() {
+    //Se obtiene el valor de entrada(localStorage) false o true, si es null lo define como true(entrada)
+    this.entrada = await this.storageService.get('isEntrada') == null ? true : await this.storageService.get('isEntrada');
+    this.institucion = null;
+    //Se obtienen de localStorage los datos del usuario, rol,nombre,token
+    let user = await this.storageService.get('userData');
+    this.institucionService.getInstituciones(user.token).subscribe(inst => {
+      this.instituciones = inst;
+      this.institucionService.setInstituciones(inst);
+    });
+  }
 
+  //Marcada de entrada
+  async marcar() {
+    console.log(this.observacion);
+    this.entrada = false;
+    let user = await this.storageService.get('userData');
+    let geo = await this.devolverPosicion();
+    //Se llama al servicio de asistencia para persistirla
+    this.asistenciaService.postAsistencia(user.token, user.idUsuario, 1, geo, this.institucion, this.observacion).subscribe(() => {
+      //Se asigna false el valor 'isEntrada' de localStorage
+      this.observacion = "";
+      this.storageService.store('isEntrada', false);
+      alert('Entrada con exito');
+    });
+  }
+
+  //Marcada de Salida
   async marcarSalida() {
+    console.log(this.observacion);
     this.entrada = true;
     let user = await this.storageService.get('userData');
-    await this.crearAsistencia(user.idUsuario, 2);
-    let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': user.token });
-    let options = { headers: headers, withCredintials: false };
-    this.htthService.post('asistencia', this.asistencia, options).subscribe(asist => {
+    let geo = await this.devolverPosicion();
+    this.asistenciaService.postAsistencia(user.token, user.idUsuario, 2, geo, this.institucion, this.observacion).subscribe(() => {
       this.storageService.store('isEntrada', true);
+      this.observacion = "";
       alert('Salida con exito');
       this.router.navigate(['']);
     });
   }
 
 
-  //Crea una asistencia en la fecha actual, asocia una marcada
-  //Crea un usuario con el id de usuario de localStorage
-  //Crea un EstadoMarcada y lo Asocia a una marcada
-  //Se agrega la marcada creada a la coleccion de marcadas de la asistencia
-  async crearAsistencia(idUsuario: number, idEstadoMarcada: number): Promise<Asistencia> {
-    let geo = await this.geo.getCurrentPosition();
-    let fecha = DateUtils.mixedDateToDateString(new Date());
-    let hora = DateUtils.mixedDateToTimeString(new Date());
-    this.usuario = new Usuario(idUsuario);
-    this.asistencia = new Asistencia(fecha, this.usuario);
-    this.estadoMarcada = new EstadoMarcada(idEstadoMarcada);
-    this.marcada = new Marcada(hora, ' altitude ' + geo.coords.latitude + ' longitude ' + geo.coords.longitude, this.estadoMarcada);
-    this.marcada.institucion = this.institucion;
-    this.asistencia.marcadas.push(this.marcada);
-    return this.asistencia;
+  //Devuelve la geolocalizacion
+  async devolverPosicion() {
+    return this.displayLoader().then(async (loader) => {
+      return this.geo.getCurrentPosition().then(position => {
+        loader.dismiss();
+        return 'lat ' + position.coords.latitude + ' long ' + position.coords.longitude;
+      }).catch(err => {
+        loader.dismiss();
+        return null;
+      });
+    });
+  }
+
+  //Muestra un mensaje de carga...
+  async displayLoader() {
+    const loading = await this.loading.create({
+      message: 'Cargando...',
+    });
+    await loading.present();
+    return loading;
   }
 }

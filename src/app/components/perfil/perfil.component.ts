@@ -4,6 +4,7 @@ import { StorageService } from 'src/app/servicios/storage/storage.service';
 import { HttpService } from 'src/app/servicios/http/http.service';
 import { HttpHeaders } from '@angular/common/http';
 import { Usuario } from 'src/app/modelo/Usuario';
+import { UsuarioService } from 'src/app/servicios/usuario/usuario.service';
 
 @Component({
   selector: 'app-perfil',
@@ -17,18 +18,21 @@ export class PerfilComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private storageService: StorageService,
-    private httpService: HttpService
+    private usuarioService: UsuarioService
   ) { }
 
   async ngOnInit() {
     this.usuario['rol'] = {};
     let user = await this.storageService.get('userData');
-    let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': user.token });
-    let options = { headers: headers, withCredintials: false };
-    this.httpService.get('usuarios/' + user.idUsuario, options).subscribe(usuario => {
-      console.log(usuario);
+    this.usuarioService.getUsuarioPorId(user.token, user.idUsuario).subscribe(usuario => {
       this.usuario = usuario;
-    });
+    });;
+    // let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': user.token });
+    // let options = { headers: headers, withCredintials: false };
+    // this.httpService.get('usuarios/' + user.idUsuario, options).subscribe(usuario => {
+    //   console.log(usuario);
+    //   this.usuario = usuario;
+    // });
   }
 
   logout() {
